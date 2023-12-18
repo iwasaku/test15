@@ -442,16 +442,16 @@ phina.define("MainScene", {
                         baseline: "middle",
                         width: 150,
                         height: 75,
-                        //fill: "rgba(0, 0, 0, 1.0)",    // ボタン色
-                        stroke: '#DEE3FF',         // 枠色
-                        strokeWidth: 5,         // 枠太さ
+                        //fill: "#6A93CC",  // ボタン色
+                        stroke: '#DEE3FF',  // 枠色
+                        strokeWidth: 5,     // 枠太さ
                     }
                 ).addChildTo(group4).setPosition(SCREEN_CENTER_X - (SCREEN_CENTER_X / 2), SCREEN_CENTER_Y + (SCREEN_CENTER_Y / 2)).onclick = function () {
                     let message = "UxTxNx GAME\nスコア: " + nowScore + "\n";
                     var twitterURL = phina.social.Twitter.createURL({
                         text: message,
                         hashtags: ["ネムレス", "NEMLESSS"],
-                        url: "https://iwasaku.github.io/test15/NMGM/",
+                        url: "https://iwasaku.github.io/test15/UG/",
                     });
                     window.open(twitterURL);
                 };
