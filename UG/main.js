@@ -8,6 +8,7 @@ const SCREEN_WIDTH = 640;
 const SCREEN_HEIGHT = 960;
 const SCREEN_CENTER_X = SCREEN_WIDTH / 2;   // スクリーン幅の半分
 const SCREEN_CENTER_Y = SCREEN_HEIGHT / 2;  // スクリーン高さの半分
+const BALL_Y = 128 - 16 - 8;
 
 const GAME_MODE = defineEnum({
     START_INIT: {
@@ -230,7 +231,7 @@ phina.define("MainScene", {
         group1 = DisplayElement().addChildTo(this);   // ボール
         group2 = DisplayElement().addChildTo(this);   // 壁
         group3 = DisplayElement().addChildTo(this);   // 爆発
-        group4 = DisplayElement().addChildTo(this);   // 爆発
+        group4 = DisplayElement().addChildTo(this);   // ステータスs
 
         // ラベル設定
         nowScoreLabelStr = Label(
@@ -322,7 +323,7 @@ phina.define("MainScene", {
             shape.y = y;
             shape.width = width;
             shape.height = height;
-            shape.alpha = 0.5;// Box2dのデバッグ表示が見えるようにする FIXME:後で1.0にする
+            shape.alpha = 1.0;
             b2dLayer.createBody({
                 width: shape.width,
                 height: shape.height,
@@ -336,6 +337,17 @@ phina.define("MainScene", {
         createFloor(635, 505, 10, 800); // 右
         createFloor(320, 900, 640, 10); // 底
 
+        // ゲームオーバーライン
+        {
+            var shape = phina.display.RectangleShape().addChildTo(group2);
+            shape.x = SCREEN_CENTER_X;
+            shape.y = 210;
+            shape.width = 640;
+            shape.height = 1;
+            shape.alpha = 1.0;
+        }
+
+        // 進化
         for (let ii = 0; ii < 11; ii++) {
             Sprite(ballDefTable[ii].name).addChildTo(group1).setPosition(128 + 32 + (ii * 32), SCREEN_HEIGHT - 32).setSize(32, 32);
         }
@@ -359,7 +371,7 @@ phina.define("MainScene", {
             case GAME_MODE.START:
                 {
                     if (createBallFlag) {
-                        createBall(nextBallKind[0], this.gridX.center(), 205, true, "static");
+                        createBall(nextBallKind[0], this.gridX.center(), BALL_Y, true, "static");
                         nextBallKind.shift();
                         nextBallKind.push(myRandom(0, 4));
                         nextBallSprite.remove();
@@ -412,7 +424,7 @@ phina.define("MainScene", {
                     let isGameOver = false;
                     spriteArray.forEach(function (tmpSprite) {
                         if (tmpSprite.dropStatus === DROP_STATUS.DROP_END) {
-                            if (tmpSprite.y - (tmpSprite.srcRect.height / 2) <= 210) {
+                            if (tmpSprite.y + (tmpSprite.srcRect.height / 2) <= 210) {
                                 isGameOver = true;
                             }
                         }
@@ -472,6 +484,25 @@ phina.define("MainScene", {
                 ).addChildTo(group4).setPosition(SCREEN_CENTER_X + (SCREEN_CENTER_X / 2), SCREEN_CENTER_Y + (SCREEN_CENTER_Y / 2)).onpush = function () {
                     that.exit();
                 };
+                gameOverLabel = Label(
+                    {
+                        text: "GAME OVER",
+                        fontSize: 96,
+                        //fontWeight: "bold",
+                        fontFamily: "misaki_gothic",
+                        align: "center",
+                        //baseline: "bottom",
+                        //lineHeight: 3,
+
+                        //padding: 20,
+                        //backgroundColor: "lightgreen",
+                        fill: "white",
+                        stroke: "white",
+                        strokeWidth: 10,
+                        shadow: "black",
+                        shadowBlur: 10,
+                    }
+                ).addChildTo(group4).setPosition(SCREEN_CENTER_X, SCREEN_CENTER_Y);
             // TRUE
             case GAME_MODE.END:
                 // GAME OVERの表示
@@ -544,7 +575,7 @@ function createBall(kind, xpos, ypos, isDrop, bodyType) {
             if (this.dropStatus != DROP_STATUS.DRAG) return;
             let ballDef = ballDefTable[this.kind];
             let tmpX = e.pointer.x;
-            let tmpY = 205;
+            let tmpY = BALL_Y;
             let radius = ballDef.size / 2.0;
             if (tmpX <= (0 + 11) + radius) tmpX = (0 + 11) + radius;
             if (tmpX >= (SCREEN_WIDTH - 11) - radius) tmpX = (SCREEN_WIDTH - 11) - radius;
