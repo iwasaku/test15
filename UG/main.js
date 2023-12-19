@@ -73,17 +73,29 @@ const BODY_TYPE = defineEnum({
 
 // ボール定義用テーブル
 const ballDefTable = [
-    { name: "ball_00", size: 50, density: 1, point: 1 },
-    { name: "ball_01", size: 85, density: 2, point: 3 },
-    { name: "ball_02", size: 120, density: 3, point: 6 },
-    { name: "ball_03", size: 155, density: 4, point: 10 },
-    { name: "ball_04", size: 190, density: 5, point: 15 },
-    { name: "ball_05", size: 225, density: 6, point: 21 },
-    { name: "ball_06", size: 260, density: 7, point: 28 },
-    { name: "ball_07", size: 295, density: 8, point: 36 },
-    { name: "ball_08", size: 330, density: 9, point: 45 },
-    { name: "ball_09", size: 365, density: 10, point: 55 },
-    { name: "ball_10", size: 400, density: 11, point: 0 },
+    //    { name: "ball_00", size: 50 * 1.0, density: 1, point: 1 },
+    //    { name: "ball_01", size: 85 * 0.98, density: 2, point: 3 },
+    //    { name: "ball_02", size: 120 * 0.96, density: 3, point: 6 },
+    //    { name: "ball_03", size: 155 * 0.94, density: 4, point: 10 },
+    //    { name: "ball_04", size: 190 * 0.92, density: 5, point: 15 },
+    //    { name: "ball_05", size: 225 * 0.90, density: 6, point: 21 },
+    //    { name: "ball_06", size: 260 * 0.88, density: 7, point: 28 },
+    //    { name: "ball_07", size: 295 * 0.86, density: 8, point: 36 },
+    //    { name: "ball_08", size: 330 * 0.84, density: 9, point: 45 },
+    //    { name: "ball_09", size: 365 * 0.82, density: 10, point: 55 },
+    //    { name: "ball_10", size: 400 * 0.80, density: 11, point: 0 },
+
+    { name: "ball_00", size: 50.0 * 0.97, density: 1, point: 1 },
+    { name: "ball_01", size: 60.2 * 0.97, density: 2, point: 3 },
+    { name: "ball_02", size: 72.5 * 0.97, density: 3, point: 6 },
+    { name: "ball_03", size: 87.3 * 0.97, density: 4, point: 10 },
+    { name: "ball_04", size: 105.1 * 0.97, density: 5, point: 15 },
+    { name: "ball_05", size: 126.5 * 0.97, density: 6, point: 21 },
+    { name: "ball_06", size: 152.3 * 0.97, density: 7, point: 28 },
+    { name: "ball_07", size: 183.4 * 0.97, density: 8, point: 36 },
+    { name: "ball_08", size: 220.8 * 0.97, density: 9, point: 45 },
+    { name: "ball_09", size: 265.9 * 0.97, density: 10, point: 55 },
+    { name: "ball_10", size: 320.0 * 0.97, density: 11, point: 0 },
 ];
 
 // Box2D用レイヤー
@@ -359,7 +371,7 @@ phina.define("MainScene", {
 
         nowScore = 0;
         createBallFlag = true;
-        nextBallKind = [0, 0];
+        nextBallKind = [0, myRandom(0, 4)];
         nextBallSprite = Sprite(ballDefTable[0].name).addChildTo(group1).setPosition(SCREEN_WIDTH - 32, 60).setSize(48, 48);
         gameMode = GAME_MODE.START_INIT;
     },
