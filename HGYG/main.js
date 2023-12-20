@@ -252,7 +252,7 @@ phina.define("MainScene", {
                 //backgroundColor: "lightgreen",
                 fill: "white",
                 stroke: "white",
-                strokeWidth: 10,
+                strokeWidth: 1,
                 shadow: "black",
                 shadowBlur: 10,
             }
@@ -271,7 +271,7 @@ phina.define("MainScene", {
                 //backgroundColor: "lightgreen",
                 fill: "white",
                 stroke: "white",
-                strokeWidth: 10,
+                strokeWidth: 1,
                 shadow: "black",
                 shadowBlur: 10,
             }
@@ -290,7 +290,7 @@ phina.define("MainScene", {
                 //backgroundColor: "lightgreen",
                 fill: "white",
                 stroke: "white",
-                strokeWidth: 10,
+                strokeWidth: 1,
                 shadow: "black",
                 shadowBlur: 10,
             }
@@ -502,21 +502,17 @@ phina.define("MainScene", {
                     {
                         text: "GAME OVER",
                         fontSize: 96,
-                        //fontWeight: "bold",
                         fontFamily: "misaki_gothic",
                         align: "center",
-                        //baseline: "bottom",
-                        //lineHeight: 3,
 
-                        //padding: 20,
-                        //backgroundColor: "lightgreen",
                         fill: "white",
                         stroke: "white",
-                        strokeWidth: 10,
+                        strokeWidth: 1,
                         shadow: "black",
                         shadowBlur: 10,
                     }
                 ).addChildTo(group4).setPosition(SCREEN_CENTER_X, SCREEN_CENTER_Y);
+                SoundManager.play("gameover");
             // TRUE
             case GAME_MODE.END:
                 // GAME OVERの表示
