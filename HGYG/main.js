@@ -73,18 +73,6 @@ const BODY_TYPE = defineEnum({
 
 // ボール定義用テーブル
 const ballDefTable = [
-    //    { name: "ball_00", size: 50 * 1.0, density: 1, point: 1 },
-    //    { name: "ball_01", size: 85 * 0.98, density: 2, point: 3 },
-    //    { name: "ball_02", size: 120 * 0.96, density: 3, point: 6 },
-    //    { name: "ball_03", size: 155 * 0.94, density: 4, point: 10 },
-    //    { name: "ball_04", size: 190 * 0.92, density: 5, point: 15 },
-    //    { name: "ball_05", size: 225 * 0.90, density: 6, point: 21 },
-    //    { name: "ball_06", size: 260 * 0.88, density: 7, point: 28 },
-    //    { name: "ball_07", size: 295 * 0.86, density: 8, point: 36 },
-    //    { name: "ball_08", size: 330 * 0.84, density: 9, point: 45 },
-    //    { name: "ball_09", size: 365 * 0.82, density: 10, point: 55 },
-    //    { name: "ball_10", size: 400 * 0.80, density: 11, point: 0 },
-
     { name: "ball_00", size: 50.0 * 0.97, density: 1, point: 1 },
     { name: "ball_01", size: 60.2 * 0.97, density: 2, point: 3 },
     { name: "ball_02", size: 72.5 * 0.97, density: 3, point: 6 },
@@ -197,7 +185,7 @@ phina.define("TitleScene", {
         this.backgroundColor = 'black';
         // ラベル
         Label({
-            text: 'UxTxNx\nGAME',
+            text: ' \nGAME',
             fontSize: 160,
             fontFamily: "misaki_gothic",
             fill: 'white',
@@ -214,6 +202,10 @@ phina.define("TitleScene", {
             fontFamily: "misaki_gothic",
             fill: 'white',
         }).addChildTo(this).setPosition(SCREEN_CENTER_X, SCREEN_CENTER_Y + SCREEN_HEIGHT * 1 / 4);
+
+        // タイトルロゴ
+        Sprite("title").addChildTo(this).setPosition(SCREEN_CENTER_X, SCREEN_CENTER_Y - 196).setSize(320 * 1.8, 178 * 1.8);
+
     },
     // タッチで次のシーンへ
     onpointstart: function () {
@@ -329,12 +321,29 @@ phina.define("MainScene", {
         b2dLayer.world.SetContactListener(contactListener);
 
         // 容器を生成
+        // ゲームオーバーライン
+        {
+            var shape = phina.display.RectangleShape().addChildTo(group2);
+            shape.x = SCREEN_CENTER_X;
+            shape.y = 210;
+            shape.width = 640 - 22;
+            shape.height = 5;
+            shape.alpha = 1.0;
+            shape.fill = "#FF0000";
+            shape.stroke = "#FF0000";
+            shape.strokeWidth = 0;
+        }
+
+        // 壁＆底
         var createFloor = function (x, y, width, height) {
             var shape = phina.display.RectangleShape().addChildTo(group2);
             shape.x = x;
             shape.y = y;
             shape.width = width;
             shape.height = height;
+            shape.fill = "#FFFFFF";
+            shape.stroke = "#FFFFFF";
+            shape.cornerRadius = 4;
             shape.alpha = 1.0;
             b2dLayer.createBody({
                 width: shape.width,
@@ -344,22 +353,12 @@ phina.define("MainScene", {
                 userData: { idx: -1, kind: -1, deleted: false },
             }).attachTo(shape);
         }.bind(this);
-
         createFloor(5, 505, 10, 800);  // 左
         createFloor(635, 505, 10, 800); // 右
         createFloor(320, 900, 640, 10); // 底
 
-        // ゲームオーバーライン
-        {
-            var shape = phina.display.RectangleShape().addChildTo(group2);
-            shape.x = SCREEN_CENTER_X;
-            shape.y = 210;
-            shape.width = 640;
-            shape.height = 1;
-            shape.alpha = 1.0;
-        }
 
-        // 進化
+        // 進化の図
         for (let ii = 0; ii < 11; ii++) {
             Sprite(ballDefTable[ii].name).addChildTo(group1).setPosition(128 + 32 + (ii * 32), SCREEN_HEIGHT - 32).setSize(32, 32);
         }
@@ -425,6 +424,8 @@ phina.define("MainScene", {
                             // obj.aとobj.bを消す
                             removeBopdy(aBody);
                             removeBopdy(bBody);
+
+                            SoundManager.play("explosion_" + myRandom(0, 6));
                         }
                     });
                     contactIDList = [];
@@ -471,11 +472,11 @@ phina.define("MainScene", {
                         strokeWidth: 5,     // 枠太さ
                     }
                 ).addChildTo(group4).setPosition(SCREEN_CENTER_X - (SCREEN_CENTER_X / 2), SCREEN_CENTER_Y + (SCREEN_CENTER_Y / 2)).onclick = function () {
-                    let message = "UxTxNx GAME\nスコア: " + nowScore + "\n";
+                    let message = "HxGxYx GAME\nスコア: " + nowScore + "\n";
                     var twitterURL = phina.social.Twitter.createURL({
                         text: message,
-                        hashtags: ["ネムレス", "NEMLESSS"],
-                        url: "https://iwasaku.github.io/test15/UG/",
+                        hashtags: ["平沢グラインド唯"],
+                        url: "https://iwasaku.github.io/test15/HGYG/",
                     });
                     window.open(twitterURL);
                 };

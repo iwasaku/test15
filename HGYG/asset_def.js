@@ -16,6 +16,7 @@ var ASSETS = {
         "ball_10": "./resource/ball_10.png?20231220",
 
         "explosion": "./resource/expl_48.png",
+        "title": "./resource/hxgxyx.png",
     },
     spritesheet: {
         "explosion_ss":
@@ -38,8 +39,13 @@ var ASSETS = {
         },
     },
     sound: {
-        "explosion": "https://iwasaku.github.io/test10/PRJNTK/resource/se/se_explode08.mp3",
-        "shot": "https://iwasaku.github.io/test10/PRJNTK/resource/se/laser2.mp3",
-        "item": "https://iwasaku.github.io/test7/NEMLESSSTER/resource/coin05.mp3",
+        "explosion_0": "https://iwasaku.github.io/test8/COKS/resource/explosion_0.mp3",
+        "explosion_1": "https://iwasaku.github.io/test8/COKS/resource/explosion_1.mp3",
+        "explosion_2": "https://iwasaku.github.io/test8/COKS/resource/explosion_2.mp3",
+        "explosion_3": "https://iwasaku.github.io/test8/COKS/resource/explosion_3.mp3",
+        "explosion_4": "https://iwasaku.github.io/test8/COKS/resource/explosion_4.mp3",
+        "explosion_5": "https://iwasaku.github.io/test8/COKS/resource/explosion_5.mp3",
+        "explosion_6": "https://iwasaku.github.io/test8/COKS/resource/explosion_6.mp3",
+        "gameover": "https://iwasaku.github.io/test11/UT-404/SSS2/resource/t02/12.mp3",
     },
 };
