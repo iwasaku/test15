@@ -415,9 +415,9 @@ phina.define("MainScene", {
                             nowScoreLabel.text = nowScore;
 
                             // kindが9以下ならkind+1のボールを中点に生成する
+                            let xpos = ((aBodyPos.x + bBodyPos.x) / 2.0) * b2dLayer.world._scale;
+                            let ypos = ((aBodyPos.y + bBodyPos.y) / 2.0) * b2dLayer.world._scale;
                             if (aBody.GetUserData().kind <= 9) {
-                                let xpos = ((aBodyPos.x + bBodyPos.x) / 2.0) * b2dLayer.world._scale;
-                                let ypos = ((aBodyPos.y + bBodyPos.y) / 2.0) * b2dLayer.world._scale;
                                 createBall(kind + 1, xpos, ypos, false, "dynamic");
                             }
 
@@ -425,6 +425,7 @@ phina.define("MainScene", {
                             removeBopdy(aBody);
                             removeBopdy(bBody);
 
+                            Explosion(xpos, ypos, ballDefTable[kind].size * 1.5).addChildTo(group3);
                             SoundManager.play("explosion_" + myRandom(0, 6));
                         }
                     });
@@ -565,6 +566,37 @@ phina.main(function () {
     app.run();
 });
 
+phina.define("Explosion", {
+    // Spriteを継承
+    superClass: 'Sprite',
+    // 初期化
+    init: function (xpos, ypos, size) {
+        // 親クラスの初期化
+        this.superInit('explosion', 48, 48);
+        // SpriteSheetをスプライトにアタッチ
+        var anim = FrameAnimation('explosion_ss').attachTo(this);
+        // スプライトシートのサイズにフィットさせない
+        anim.fit = false;
+        //アニメーションを再生する
+        anim.gotoAndPlay('start');
+        // サイズ変更
+        this.setSize(size, size);
+
+        this.x = xpos;
+        this.y = ypos;
+
+        // 参照用
+        this.anim = anim;
+    },
+    // 毎フレーム処理
+    update: function () {
+        if (gameMode === GAME_MODE.END) return;
+        // アニメーションが終わったら自身を消去
+        if (this.anim.finished) {
+            this.remove();
+        }
+    },
+});
 // 
 function createBall(kind, xpos, ypos, isDrop, bodyType) {
     let ballDef = ballDefTable[kind];
