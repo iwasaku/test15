@@ -406,27 +406,30 @@ phina.define("MainScene", {
 
                         // 同じ種類のボール同士が接触した？
                         if ((aBody.GetUserData().kind === bBody.GetUserData().kind)) {
-                            let kind = aBody.GetUserData().kind;
-                            let aBodyPos = aBody.GetPosition();
-                            let bBodyPos = bBody.GetPosition();
+                            // 片方でも既に削除済みならチェックしない
+                            if (aBody.GetUserData().deleted === false && bBody.GetUserData().deleted === false) {
+                                let kind = aBody.GetUserData().kind;
+                                let aBodyPos = aBody.GetPosition();
+                                let bBodyPos = bBody.GetPosition();
 
-                            // スコア加算
-                            nowScore += ballDefTable[kind].point;
-                            nowScoreLabel.text = nowScore;
+                                // スコア加算
+                                nowScore += ballDefTable[kind].point;
+                                nowScoreLabel.text = nowScore;
 
-                            // kindが9以下ならkind+1のボールを中点に生成する
-                            let xpos = ((aBodyPos.x + bBodyPos.x) / 2.0) * b2dLayer.world._scale;
-                            let ypos = ((aBodyPos.y + bBodyPos.y) / 2.0) * b2dLayer.world._scale;
-                            if (aBody.GetUserData().kind <= 9) {
-                                createBall(kind + 1, xpos, ypos, false, "dynamic");
+                                // kindが9以下ならkind+1のボールを中点に生成する
+                                let xpos = ((aBodyPos.x + bBodyPos.x) / 2.0) * b2dLayer.world._scale;
+                                let ypos = ((aBodyPos.y + bBodyPos.y) / 2.0) * b2dLayer.world._scale;
+                                if (aBody.GetUserData().kind <= 9) {
+                                    createBall(kind + 1, xpos, ypos, false, "dynamic");
+                                }
+
+                                // obj.aとobj.bを消す
+                                removeBopdy(aBody);
+                                removeBopdy(bBody);
+
+                                Explosion(xpos, ypos, ballDefTable[kind].size * 1.5).addChildTo(group3);
+                                SoundManager.play("explosion_" + myRandom(0, 6));
                             }
-
-                            // obj.aとobj.bを消す
-                            removeBopdy(aBody);
-                            removeBopdy(bBody);
-
-                            Explosion(xpos, ypos, ballDefTable[kind].size * 1.5).addChildTo(group3);
-                            SoundManager.play("explosion_" + myRandom(0, 6));
                         }
                     });
                     contactIDList = [];
