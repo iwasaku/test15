@@ -348,8 +348,10 @@ phina.define("MainScene", {
 
         // 進化の図
         {
+            let ofs = [0, -11, -18, -22, -23, -21, -16, -7, 5, 20, 38];
             for (let ii = 0; ii < 11; ii++) {
-                Sprite(ballDefTable[ii].name).addChildTo(group1).setPosition(128 + 32 + (ii * 32), SCREEN_HEIGHT - 32).setSize(32, 32);
+                let scl = 0.6 + (ii / 10.0);
+                Sprite(ballDefTable[ii].name).addChildTo(group1).setPosition(128 + (ii * 32) + ofs[ii], SCREEN_HEIGHT - 27).setSize(32, 32).setScale(scl, scl);
             }
             var shape = phina.display.RectangleShape().addChildTo(group0);
             shape.x = SCREEN_CENTER_X;
