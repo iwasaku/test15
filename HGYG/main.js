@@ -416,7 +416,7 @@ phina.define("MainScene", {
                                 // スコア加算
                                 nowScore += ballDefTable[kind].point;
                                 nowScoreLabel.text = nowScore;
-                                let tmpAlpha = nowScore / 9000.0;
+                                let tmpAlpha = nowScore / 3000.0;
                                 if (tmpAlpha >= 1.0) tmpAlpha = 1.0;
                                 bgSprite.alpha = tmpAlpha;
 
@@ -651,9 +651,6 @@ function createBall(kind, xpos, ypos, isDrop, bodyType) {
     } else {
         this.dropStatus = DROP_STATUS.DROP_END;
     }
-
-    // Box2dのデバッグ表示が見えるようにする
-    tmpSprite.alpha = 0.5;  // FIXME:あとで1.0にする
     tmpSprite.alpha = 1.0;
 
     // Box2dオブジェクトを作成してballにアタッチ
