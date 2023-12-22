@@ -96,6 +96,9 @@ let group3 = null;  // 爆発
 
 let nowScoreLabel = null;
 let nowScore = 0;
+let hgyCount = 0;
+let bgSprite = null;
+
 let ballArray = [];
 
 let randomSeed = 3557;
@@ -183,6 +186,10 @@ phina.define("TitleScene", {
         this.superInit(option);
         // 背景色
         this.backgroundColor = 'black';
+
+        // タイトルロゴ
+        Sprite("title").addChildTo(this).setPosition(SCREEN_CENTER_X, SCREEN_CENTER_Y - 196).setSize(320 * 1.8, 178 * 1.8);
+
         // ラベル
         Label({
             text: ' \nGAME',
@@ -202,10 +209,6 @@ phina.define("TitleScene", {
             fontFamily: "misaki_gothic",
             fill: 'white',
         }).addChildTo(this).setPosition(SCREEN_CENTER_X, SCREEN_CENTER_Y + SCREEN_HEIGHT * 1 / 4);
-
-        // タイトルロゴ
-        Sprite("title").addChildTo(this).setPosition(SCREEN_CENTER_X, SCREEN_CENTER_Y - 196).setSize(320 * 1.8, 178 * 1.8);
-
     },
     // タッチで次のシーンへ
     onpointstart: function () {
@@ -245,11 +248,6 @@ phina.define("MainScene", {
                 //fontWeight: "bold",
                 fontFamily: "misaki_gothic",
                 align: "left",
-                //baseline: "bottom",
-                //lineHeight: 3,
-
-                //padding: 20,
-                //backgroundColor: "lightgreen",
                 fill: "white",
                 stroke: "white",
                 strokeWidth: 1,
@@ -261,14 +259,8 @@ phina.define("MainScene", {
             {
                 text: "0",
                 fontSize: 32,
-                //fontWeight: "bold",
                 fontFamily: "misaki_gothic",
                 align: "left",
-                //baseline: "bottom",
-                //lineHeight: 3,
-
-                //padding: 20,
-                //backgroundColor: "lightgreen",
                 fill: "white",
                 stroke: "white",
                 strokeWidth: 1,
@@ -280,14 +272,8 @@ phina.define("MainScene", {
             {
                 text: "ネクスト",
                 fontSize: 32,
-                //fontWeight: "bold",
                 fontFamily: "misaki_gothic",
                 align: "left",
-                //baseline: "bottom",
-                //lineHeight: 3,
-
-                //padding: 20,
-                //backgroundColor: "lightgreen",
                 fill: "white",
                 stroke: "white",
                 strokeWidth: 1,
@@ -320,6 +306,9 @@ phina.define("MainScene", {
         // Worldにコンタクトリスナーをセット
         b2dLayer.world.SetContactListener(contactListener);
 
+        // 背景
+        bgSprite = Sprite("bg").addChildTo(group0).setPosition(SCREEN_CENTER_X, SCREEN_CENTER_Y + 96).setSize(145 * 4.5, 165 * 4.5);
+        bgSprite.alpha = 0.0;
         // 容器を生成
         // ゲームオーバーライン
         {
@@ -357,11 +346,22 @@ phina.define("MainScene", {
         createFloor(635, 505, 10, 800); // 右
         createFloor(320, 900, 640, 10); // 底
 
-
         // 進化の図
-        for (let ii = 0; ii < 11; ii++) {
-            Sprite(ballDefTable[ii].name).addChildTo(group1).setPosition(128 + 32 + (ii * 32), SCREEN_HEIGHT - 32).setSize(32, 32);
+        {
+            for (let ii = 0; ii < 11; ii++) {
+                Sprite(ballDefTable[ii].name).addChildTo(group1).setPosition(128 + 32 + (ii * 32), SCREEN_HEIGHT - 32).setSize(32, 32);
+            }
+            var shape = phina.display.RectangleShape().addChildTo(group0);
+            shape.x = SCREEN_CENTER_X;
+            shape.y = SCREEN_HEIGHT - 32;
+            shape.width = 640;
+            shape.height = 46;
+            shape.alpha = 1.0;
+            shape.fill = "#000000";
+            shape.stroke = "#000000";
+            shape.strokeWidth = 0;
         }
+
         b2dBallArray = [];
         b2dBodyIndex = 0;
         b2dBallOperationIdx = 0;
@@ -369,6 +369,7 @@ phina.define("MainScene", {
         spriteArray = [];
 
         nowScore = 0;
+        hgyCount = 0;
         createBallFlag = true;
         nextBallKind = [0, myRandom(0, 4)];
         nextBallSprite = Sprite(ballDefTable[0].name).addChildTo(group1).setPosition(SCREEN_WIDTH - 32, 60).setSize(48, 48);
@@ -415,12 +416,16 @@ phina.define("MainScene", {
                                 // スコア加算
                                 nowScore += ballDefTable[kind].point;
                                 nowScoreLabel.text = nowScore;
+                                let tmpAlpha = nowScore / 9000.0;
+                                if (tmpAlpha >= 1.0) tmpAlpha = 1.0;
+                                bgSprite.alpha = tmpAlpha;
 
                                 // kindが9以下ならkind+1のボールを中点に生成する
                                 let xpos = ((aBodyPos.x + bBodyPos.x) / 2.0) * b2dLayer.world._scale;
                                 let ypos = ((aBodyPos.y + bBodyPos.y) / 2.0) * b2dLayer.world._scale;
                                 if (aBody.GetUserData().kind <= 9) {
                                     createBall(kind + 1, xpos, ypos, false, "dynamic");
+                                    if (kind + 1 === 10) hgyCount++;
                                 }
 
                                 // obj.aとobj.bを消す
@@ -477,6 +482,7 @@ phina.define("MainScene", {
                     }
                 ).addChildTo(group4).setPosition(SCREEN_CENTER_X - (SCREEN_CENTER_X / 2), SCREEN_CENTER_Y + (SCREEN_CENTER_Y / 2)).onclick = function () {
                     let message = "HxGxYx GAME\nスコア: " + nowScore + "\n";
+                    if (hgyCount >= 1) message += hgyCount + "平沢\n";
                     var twitterURL = phina.social.Twitter.createURL({
                         text: message,
                         hashtags: ["平沢グラインド唯"],

@@ -16,7 +16,9 @@ var ASSETS = {
         "ball_10": "./resource/ball_10.png?20231220",
 
         "explosion": "./resource/expl_48.png",
+
         "title": "./resource/hxgxyx.png",
+        "bg": "./resource/bg.png",
     },
     spritesheet: {
         "explosion_ss":

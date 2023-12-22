@@ -42,7 +42,6 @@ phina.define('phina.box2d.Box2dLayer', {
     },
 
     update: function (app) {
-        // var timeStep = app.ticker.frameTime/1000;
         var timeStep = app.ticker.deltaTime / 1000;
         var velocityIterations = 10;
         var positionIterations = 10;
@@ -52,11 +51,11 @@ phina.define('phina.box2d.Box2dLayer', {
 
     draw: function (canvas) {
         // debug画面の更新
-        return;
-        this.world.ClearForces();
-        this.world.DrawDebugData();
-        var domElement = this.canvas.domElement;
-        canvas.context.drawImage(domElement, 0, 0, domElement.width, domElement.height);
+        //this.world.ClearForces();
+        //this.world.ClearForces();
+        //this.world.DrawDebugData();
+        //var domElement = this.canvas.domElement;
+        //canvas.context.drawImage(domElement, 0, 0, domElement.width, domElement.height);
     },
 
     getWorld: function () {
