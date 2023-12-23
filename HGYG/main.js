@@ -471,14 +471,14 @@ phina.define("MainScene", {
                 // TWEETボタンの表示
                 tweetButton = Button(
                     {
-                        text: "TWEET",
+                        text: "POST",
                         fontSize: 32,
                         fontFamily: "misaki_gothic",
                         align: "center",
                         baseline: "middle",
                         width: 150,
                         height: 75,
-                        //fill: "#6A93CC",  // ボタン色
+                        fill: "#7575EF",  // ボタン色
                         stroke: '#DEE3FF',  // 枠色
                         strokeWidth: 5,     // 枠太さ
                     }
@@ -502,7 +502,7 @@ phina.define("MainScene", {
                         baseline: "middle",
                         width: 150,
                         height: 75,
-                        fill: "#6A93CC",
+                        fill: "#B2B2B2",
                         stroke: '#DEE3FF',         // 枠色
                         strokeWidth: 5,         // 枠太さ
                     }
