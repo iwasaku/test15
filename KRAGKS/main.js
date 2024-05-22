@@ -475,7 +475,7 @@ phina.define("MainScene", {
                         strokeWidth: 5,     // 枠太さ
                     }
                 ).addChildTo(group4).setPosition(SCREEN_CENTER_X - (SCREEN_CENTER_X / 2), SCREEN_CENTER_Y + (SCREEN_CENTER_Y / 2)).onclick = function () {
-                    let message = "からあげKISS\nとくてん: " + nowScore + "\n";
+                    let message = "からあげKISS\n" + nowScore + "てん\n";
                     if (kragCount >= 1) message += kragCount + "からあげ\n";
                     var twitterURL = phina.social.Twitter.createURL({
                         text: message,
