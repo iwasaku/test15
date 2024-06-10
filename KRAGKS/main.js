@@ -249,7 +249,7 @@ phina.define("MainScene", {
         ).addChildTo(group4).setPosition(16, 60);
         nowScoreLabel = Label(
             {
-                text: "0",
+                text: "0482",
                 fontSize: 32,
                 fontFamily: "misaki_gothic",
                 align: "left",
@@ -363,9 +363,11 @@ phina.define("MainScene", {
         spriteArray = [];
 
         nowScore = 0;
+        hgyCount = 0;
         kragCount = 0;
         createBallFlag = true;
-        nextBallKind = [0, myRandom(0, 4)];
+        //        nextBallKind = [0, myRandom(0, 4)];
+        nextBallKind = [9, 9, 9, 9];
         nextBallSprite = Sprite(ballDefTable[0].name).addChildTo(group1).setPosition(SCREEN_WIDTH - 32, 60).setSize(48, 48);
         gameMode = GAME_MODE.START_INIT;
     },
@@ -409,7 +411,7 @@ phina.define("MainScene", {
 
                                 // スコア加算
                                 nowScore += ballDefTable[kind].point;
-                                nowScoreLabel.text = nowScore;
+                                nowScoreLabel.text = "0482";
                                 let tmpAlpha = nowScore / 10000.0;
                                 if (tmpAlpha >= 1.0) tmpAlpha = 1.0;
                                 bgSprite.alpha = tmpAlpha;
@@ -419,6 +421,7 @@ phina.define("MainScene", {
                                 let ypos = ((aBodyPos.y + bBodyPos.y) / 2.0) * b2dLayer.world._scale;
                                 if (aBody.GetUserData().kind <= 9) {
                                     createBall(kind + 1, xpos, ypos, false, "dynamic");
+                                    if (kind + 1 === 10) hgyCount++;
                                     kragCount += 2;
                                 }
 
@@ -477,6 +480,7 @@ phina.define("MainScene", {
                 ).addChildTo(group4).setPosition(SCREEN_CENTER_X - (SCREEN_CENTER_X / 2), SCREEN_CENTER_Y + (SCREEN_CENTER_Y / 2)).onclick = function () {
                     let message = "からあげKISS\n" + nowScore + "てん\n";
                     if (kragCount >= 1) message += kragCount + "からあげ\n";
+                    if (hgyCount >= 1) message += hgyCount + "スイからあげ\n";
                     var twitterURL = phina.social.Twitter.createURL({
                         text: message,
                         hashtags: ["からあげKISS"],
