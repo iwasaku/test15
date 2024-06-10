@@ -366,8 +366,7 @@ phina.define("MainScene", {
         hgyCount = 0;
         kragCount = 0;
         createBallFlag = true;
-        //        nextBallKind = [0, myRandom(0, 4)];
-        nextBallKind = [9, 9, 9, 9];
+        nextBallKind = [0, myRandom(0, 4)];
         nextBallSprite = Sprite(ballDefTable[0].name).addChildTo(group1).setPosition(SCREEN_WIDTH - 32, 60).setSize(48, 48);
         gameMode = GAME_MODE.START_INIT;
     },
