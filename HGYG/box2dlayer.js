@@ -19,6 +19,7 @@ phina.define('phina.box2d.Box2dLayer', {
 
         this.world = world;
         this.world._scale = params.worldScale;
+        this.isPaused = false;
 
         this._setupDebugDraw();
     },
@@ -46,7 +47,9 @@ phina.define('phina.box2d.Box2dLayer', {
         var velocityIterations = 10;
         var positionIterations = 10;
         // 物理空間の更新
-        this.world.Step(timeStep, velocityIterations, positionIterations);
+        if (!this.isPaused) {
+            this.world.Step(timeStep, velocityIterations, positionIterations);
+        }
     },
 
     draw: function (canvas) {

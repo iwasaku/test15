@@ -121,6 +121,18 @@ let postText = null;
 const postURL = "https://iwasaku.github.io/test15/KRAGKS/";
 const postTags = "#からあげKISS";
 
+/**
+ * Box2Dの一時停止対応
+*/
+document.addEventListener("visibilitychange", () => {
+    if (b2dLayer === null) return;
+    if (document.hidden) {
+        b2dLayer.isPaused = true;
+    } else {
+        b2dLayer.isPaused = false;
+    }
+});
+
 /*
 */
 phina.define('LoadingScene', {

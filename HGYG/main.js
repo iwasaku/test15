@@ -120,6 +120,18 @@ let postText = null;
 const postURL = "https://iwasaku.github.io/test15/HGYG/";
 const postTags = "#平沢グラインド唯";
 
+/**
+ * Box2Dの一時停止対応
+*/
+document.addEventListener("visibilitychange", () => {
+    if (b2dLayer === null) return;
+    if (document.hidden) {
+        b2dLayer.isPaused = true;
+    } else {
+        b2dLayer.isPaused = false;
+    }
+});
+
 /*
 */
 phina.define('LoadingScene', {
@@ -291,7 +303,6 @@ phina.define("MainScene", {
             width: SCREEN_WIDTH,
             height: SCREEN_HEIGHT,
         }).addChildTo(this);
-        console.log(">>>" + b2dLayer.world._scale);
 
         var contactListener = new Box2D.Dynamics.b2ContactListener();
         // コンタクトが開始したときに呼ばれるメソッド
