@@ -1,7 +1,7 @@
 // グローバルに展開
 phina.globalize();
 
-///console.log = function () { };  // ログを出す時にはコメントアウトする
+console.log = function () { };  // ログを出す時にはコメントアウトする
 
 // 定数
 const SCREEN_WIDTH = 640;
@@ -116,6 +116,11 @@ let createBallFlag = 0;
 let nextBallKind = [0, 0];
 let nextBallSprite = null;
 
+// 共有ボタン用
+let postText = null;
+const postURL = "https://iwasaku.github.io/test15/KRAGKS/";
+const postTags = "#からあげKISS";
+
 /*
 */
 phina.define('LoadingScene', {
@@ -124,7 +129,6 @@ phina.define('LoadingScene', {
     init: function (options) {
         this.superInit(options);
         // 背景色
-        this.backgroundColor = 'black';
         var self = this;
         var loader = phina.asset.AssetLoader();
 
@@ -162,17 +166,21 @@ phina.define("InitScene", {
     init: function (option) {
         // 親クラス初期化
         this.superInit(option);
-        // 背景色
-        this.backgroundColor = 'black';
-        // ラベル
-        Label({
-            text: '',
-            fontSize: 48,
-            fill: 'yellow',
-        }).addChildTo(this).setPosition(this.gridX.center(), this.gridY.center());
+        this.font1 = false;
+        this.font2 = false;
     },
     update: function (app) {
-        this.exit();
+        // フォント読み込み待ち
+        var self = this;
+        document.fonts.load('12px "misaki_gothic"').then(function () {
+            self.font1 = true;
+        });
+        document.fonts.load('10pt "icomoon"').then(function () {
+            self.font2 = true;
+        });
+        if (this.font1 && this.font2) {
+            self.exit();
+        }
     }
 });
 
@@ -185,8 +193,6 @@ phina.define("TitleScene", {
     init: function (option) {
         // 親クラス初期化
         this.superInit(option);
-        // 背景色
-        this.backgroundColor = 'black';
 
         // ラベル
         Label({
@@ -219,8 +225,6 @@ phina.define("MainScene", {
 
         // 親クラス初期化
         this.superInit();
-        // 背景色
-        this.backgroundColor = 'black';
 
         if (!randomMode) randomSeed = 3557;
 
@@ -462,31 +466,66 @@ phina.define("MainScene", {
                     })
                 }
                 gameMode = GAME_MODE.END;
-                // TWEETボタンの表示
-                tweetButton = Button(
+                let postText = "からあげKISS\n" + nowScore + "てん";
+                if (kragCount >= 1) postText += ("\n" + kragCount + "からあげ");
+                if (hgyCount >= 1) postText += ("\n" + hgyCount + "スイからあげ");
+
+                // X
+                xButton = Button(
                     {
-                        text: "POST",
+                        text: String.fromCharCode(0xe902),
                         fontSize: 32,
-                        fontFamily: "misaki_gothic",
-                        align: "center",
-                        baseline: "middle",
-                        width: 150,
-                        height: 75,
+                        fontFamily: "icomoon",
                         fill: "#7575EF",  // ボタン色
-                        stroke: '#DEE3FF',  // 枠色
-                        strokeWidth: 5,     // 枠太さ
+                        stroke: '#DEE3FF',         // 枠色
+                        strokeWidth: 5,         // 枠太さ
+                        cornerRadius: 8,
+                        width: 64,
+                        height: 64,
+                    }
+                ).addChildTo(group4).setPosition(SCREEN_CENTER_X - (SCREEN_CENTER_X / 2) - 80, SCREEN_CENTER_Y + (SCREEN_CENTER_Y / 2)).onclick = function () {
+                    // https://developer.x.com/en/docs/twitter-for-websites/tweet-button/guides/web-intent
+                    let shareURL = "https://x.com/intent/tweet?text=" + encodeURIComponent(postText + "\n" + postTags + "\n") + "&url=" + encodeURIComponent(postURL);
+                    window.open(shareURL);
+                };
+                // threads
+                threadsButton = Button(
+                    {
+                        text: String.fromCharCode(0xe901),
+                        fontSize: 32,
+                        fontFamily: "icomoon",
+                        fill: "#7575EF",  // ボタン色
+                        stroke: '#DEE3FF',         // 枠色
+                        strokeWidth: 5,         // 枠太さ
+                        cornerRadius: 8,
+                        width: 64,
+                        height: 64,
                     }
                 ).addChildTo(group4).setPosition(SCREEN_CENTER_X - (SCREEN_CENTER_X / 2), SCREEN_CENTER_Y + (SCREEN_CENTER_Y / 2)).onclick = function () {
-                    let message = "からあげKISS\n" + nowScore + "てん\n";
-                    if (kragCount >= 1) message += kragCount + "からあげ\n";
-                    if (hgyCount >= 1) message += hgyCount + "スイからあげ\n";
-                    var twitterURL = phina.social.Twitter.createURL({
-                        text: message,
-                        hashtags: ["からあげKISS"],
-                        url: "https://iwasaku.github.io/test15/KRAGKS/",
-                    });
-                    window.open(twitterURL);
+                    // https://developers.facebook.com/docs/threads/threads-web-intents/
+                    // web intentでのハッシュタグの扱いが環境（ブラウザ、iOS、Android）によって違いすぎるので『#』を削って通常の文字列にしておく
+                    let shareURL = "https://www.threads.net/intent/post?text=" + encodeURIComponent(postText + "\n\n" + postTags.replace(/#/g, "")) + "&url=" + encodeURIComponent(postURL);
+                    window.open(shareURL);
                 };
+                // Bluesky
+                bskyButton = Button(
+                    {
+                        text: String.fromCharCode(0xe900),
+                        fontSize: 32,
+                        fontFamily: "icomoon",
+                        fill: "#7575EF",  // ボタン色
+                        stroke: '#DEE3FF',         // 枠色
+                        strokeWidth: 5,         // 枠太さ
+                        cornerRadius: 8,
+                        width: 64,
+                        height: 64,
+                    }
+                ).addChildTo(group4).setPosition(SCREEN_CENTER_X - (SCREEN_CENTER_X / 2) + 80, SCREEN_CENTER_Y + (SCREEN_CENTER_Y / 2)).onclick = function () {
+                    // https://docs.bsky.app/docs/advanced-guides/intent-links
+                    let shareURL = "https://bsky.app/intent/compose?text=" + encodeURIComponent(postText + "\n" + postTags + "\n" + postURL);
+                    window.open(shareURL);
+                };
+
                 // RESTARTボタンの表示
                 restartButton = Button(
                     {
@@ -533,6 +572,8 @@ phina.main(function () {
         width: SCREEN_WIDTH,
         height: SCREEN_HEIGHT,
         assets: ASSETS,
+        backgroundColor: 'black',
+
         // シーンのリストを引数で渡す
         scenes: [
             {
